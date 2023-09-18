@@ -1,11 +1,13 @@
 package jcn.findthecake.Main;
 
-import jcn.findthecake.Commands.StartCommand;
+import jcn.findthecake.Commands.MainCommand;
 import jcn.findthecake.Commands.TopCommand;
 import jcn.findthecake.DataBase.MySQLManager;
 import jcn.findthecake.GameManager.GameManager;
 import jcn.findthecake.Listener.FTHListener;
+import jcn.findthecake.Utilities.TabCompleter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -15,6 +17,7 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 
 public final class FindTheCake extends JavaPlugin {
+    private final String PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "FTC" + ChatColor.DARK_GRAY + "] ";
     private Logger logger = Bukkit.getLogger();
     private GameManager gameManager;
     private MySQLManager mySQLManager;
@@ -46,10 +49,13 @@ public final class FindTheCake extends JavaPlugin {
             e.printStackTrace();
         }
 
-        getCommand("ftc").setExecutor(new StartCommand(gameManager, this));
-        getCommand("top").setExecutor(new TopCommand(gameManager, this, connection));
+        getCommand("ftc").setExecutor(new MainCommand(gameManager, this, PREFIX));
+        getCommand("top").setExecutor(new TopCommand(gameManager, this, connection, PREFIX));
 
-        Bukkit.getPluginManager().registerEvents(new FTHListener(gameManager, this, connection), this);
+        getCommand("ftc").setTabCompleter(new TabCompleter());
+
+        Bukkit.getPluginManager().registerEvents(new FTHListener(gameManager, this, connection, PREFIX), this);
+
 
     }
 

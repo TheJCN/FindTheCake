@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySQLRequests {
+    private String PREFIX;
     private Connection connection;
-    public MySQLRequests(Connection connection){
+    public MySQLRequests(Connection connection, String PREFIX){
         this.connection = connection;
+        this.PREFIX = PREFIX;
     }
 
     public boolean playerExist(String playerName) throws SQLException {
@@ -40,7 +42,7 @@ public class MySQLRequests {
                 while (resultSet.next()) {
                     String playerName = resultSet.getString("playername");
                     int points = resultSet.getInt("points");
-                    String playerStats = "Ник: " + ChatColor.GOLD + playerName + ChatColor.RESET  + " Очков: " + ChatColor.GOLD +  points;
+                    String playerStats =  ChatColor.GREEN + "Ник: " + ChatColor.GOLD + playerName + ChatColor.GREEN  + " Очков: " + ChatColor.GOLD +  points;
                     topPlayers.add(playerStats);
                 }
             }

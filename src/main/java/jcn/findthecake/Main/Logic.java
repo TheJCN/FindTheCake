@@ -1,42 +1,51 @@
 package jcn.findthecake.Main;
 
 import jcn.findthecake.GameManager.GameManager;
+import jcn.findthecake.GameManager.GameState;
 import jcn.findthecake.Utilities.Metadata;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Random;
 
 public class Logic {
     private static Logic instance;
+    private String PREFIX;
     private GameManager gameManager;
     private Plugin plugin;
     private Block cakeBlock;
+    private BukkitTask timerTask;
 
-    private Logic(GameManager gameManager, Plugin plugin) {
+    private Logic(GameManager gameManager, Plugin plugin, String PREFIX) {
         this.gameManager = gameManager;
         this.plugin = plugin;
+        this.PREFIX = PREFIX;
     }
 
-    public static Logic getInstance(GameManager gameManager, Plugin plugin) {
+    public static Logic getInstance(GameManager gameManager, Plugin plugin, String PREFIX) {
         if (instance == null) {
-            instance = new Logic(gameManager, plugin);
+            instance = new Logic(gameManager, plugin, PREFIX);
         }
         return instance;
     }
 
     public void Start() {
+        if (!(gameManager.getGameState() == GameState.Active)) {
+            return;
+        }
         cakeBlock = getLocationForSpawn().getBlock();
         cakeBlock.setType(Material.CAKE);
         Metadata metadata = new Metadata(plugin, "Event Item Value");
         cakeBlock.setMetadata("Event Block", metadata);
-
-        int timerTicks = 5 * 60 * 20;
-        Timer(timerTicks);
+        Bukkit.getLogger().info("Админ лог: Торт был размещен " + cakeBlock.getLocation());
+        int timerTicks = 5 * 20;
+        startTimer(timerTicks);
     }
 
     private Location getLocationForSpawn() {
@@ -56,16 +65,21 @@ public class Logic {
         return getLocationForSpawn();
     }
 
-    public void Timer(int time) {
-        BukkitRunnable bukkitRunnable = new BukkitRunnable() {
+    public void startTimer(int time) {
+        timerTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (cakeBlock.getType() == Material.CAKE) {
-                    Bukkit.broadcastMessage("Торт все еще никто не нашел!");
-                    Bukkit.broadcastMessage("Его координаты " + cakeBlock.getLocation());
+                    Bukkit.broadcastMessage(PREFIX + ChatColor.AQUA + "Торт все еще никто не нашел!");
+                    Bukkit.broadcastMessage(PREFIX + ChatColor.AQUA + "Его координаты: " + ChatColor.LIGHT_PURPLE + "X - " + cakeBlock.getLocation().getBlockX()  + " Y - " + cakeBlock.getLocation().getBlockY() + " Z - " + cakeBlock.getLocation().getBlockZ());
                 }
             }
-        };
-        bukkitRunnable.runTaskLater(plugin, time);
+        }.runTaskLater(plugin, time);
+    }
+
+    public void cancelTimer() {
+        if (timerTask != null) {
+            timerTask.cancel();
+        }
     }
 }
