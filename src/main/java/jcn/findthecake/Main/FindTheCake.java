@@ -1,5 +1,6 @@
 package jcn.findthecake.Main;
 
+import jcn.findthecake.Commands.ResetTop;
 import jcn.findthecake.Commands.MainCommand;
 import jcn.findthecake.Commands.TopCommand;
 import jcn.findthecake.DataBase.MySQLManager;
@@ -51,6 +52,7 @@ public final class FindTheCake extends JavaPlugin {
 
         getCommand("ftc").setExecutor(new MainCommand(gameManager, this, PREFIX));
         getCommand("top").setExecutor(new TopCommand(gameManager, this, connection, PREFIX));
+        getCommand("resettop").setExecutor(new ResetTop(connection, PREFIX));
 
         getCommand("ftc").setTabCompleter(new TabCompleter());
 

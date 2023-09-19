@@ -58,4 +58,9 @@ public class MySQLRequests {
         preparedStatement.setString(1, playerName);
         preparedStatement.executeUpdate();
     }
+
+    public void resetDB() throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Stats");
+        preparedStatement.executeUpdate();
+    }
 }
