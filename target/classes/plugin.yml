@@ -1,0 +1,17 @@
+name: FindTheCake
+version: '1.0'
+main: jcn.findthecake.Main.FindTheCake
+api-version: '1.20'
+commands:
+  ftc:
+    description: Команда для запуска ивента.
+    permission: ftc.adm
+    permission-message: У вас недостаточно прав для выполнения этой команды.
+  top:
+    description: Команда для отображения топа по очкам.
+    permission: ftc.player
+    permission-message: У вас недостаточно прав для выполнения этой команды.
+  resettop:
+    description: Команда для сброса топа.
+    permission: ftc.adm
+    permission-message: У вас недостаточно прав для выполнения этой команды.
